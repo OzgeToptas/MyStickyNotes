@@ -9,23 +9,30 @@ import HomeScreen from './screens/HomeScreen';
 
 export default function App() {
   const [screen, setScreen]= useState (ScreenType.home);
+  const [notes, setNotes]= useState ([]);
+  const updateScreen = (data) = .{
+    setScreen(data)
+  }
   let content;
   if (screen=== ScreenType.addNote){
-    <AddNote/>;
-    
-  }else if(screen===ScreenType.allNotes){
-    content= <AllNoteScreen/>;
-  }elseif (screen===ScreenType.home){
-    content = <HomeScreen
-    onExit={(data)=> {
-      setScreen(data);
-    }}
+  content=  (
+  <AddNote 
+  onExit={updateScreen}
+  onSave={(data)=>setNotes([...notes,{id:Date.now(),note:data}])}/>
+  );  
+}else if(screen===ScreenType.allNotes){
+    content= <AllNoteScreen notes={notes} />;
+  }else if (screen===ScreenType.home) {
+    content = (<HomeScreen
+    onExit={updateScreen}
     />
-  };
+  );
+  console.log(notes);
   return (
     <View style={styles.container}>
 <Header/>
-<BackButton onButtonClick={(data)=>setScreen(data)}/>
+{screen!==ScreenType.home && (
+ <BackButton onButtonClick={updateScreen}/> )}
       {content}
     </View>
   );
